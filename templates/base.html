@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Risks of Using Cryptocurrencies in the Public Sector{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="app-title">
+                <i class="fas fa-shield-alt"></i>
+                Risks of Using Cryptocurrencies in the Public Sector
+            </h1>
+            <p class="header-subtitle">Analysis and Assessment of Cryptocurrency Technology Risks for Public Institutions</p>
+        </div>
+    </header>
+
+    <!-- Menu Bar -->
+    <nav class="menu-bar">
+        <ul class="menu-list">
+            <li><a href="{{ url_for('index') }}" class="menu-item {% if page == 'home' %}active{% endif %}">
+                <i class="fas fa-home"></i> Home
+            </a></li>
+            <li><a href="{{ url_for('risks') }}" class="menu-item {% if page == 'risks' %}active{% endif %}">
+                <i class="fas fa-exclamation-triangle"></i> Risks
+            </a></li>
+            <li><a href="{{ url_for('analysis') }}" class="menu-item {% if page == 'analysis' %}active{% endif %}">
+                <i class="fas fa-chart-line"></i> Analysis
+            </a></li>
+            <li><a href="{{ url_for('recommendations') }}" class="menu-item {% if page == 'recommendations' %}active{% endif %}">
+                <i class="fas fa-lightbulb"></i> Recommendations
+            </a></li>
+        </ul>
+    </nav>
+
+    <!-- Content Frame -->
+    <main class="content-frame">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <button class="action-btn" onclick="printPage()" title="Print">
+            <i class="fas fa-print"></i>
+        </button>
+        <button class="action-btn" onclick="sharePage()" title="Share">
+            <i class="fas fa-share-alt"></i>
+        </button>
+        <button class="action-btn" onclick="openSettings()" title="Settings">
+            <i class="fas fa-cog"></i>
+        </button>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSettings()">&times;</span>
+            <h2><i class="fas fa-cog"></i> Interface Settings</h2>
+            <div class="settings-form">
+                <div class="setting-group">
+                    <label>Font Size:</label>
+                    <select id="fontSize">
+                        <option value="14px">Small (14px)</option>
+                        <option value="16px" selected>Medium (16px)</option>
+                        <option value="18px">Large (18px)</option>
+                        <option value="20px">Very Large (20px)</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label>Font:</label>
+                    <select id="fontFamily">
+                        <option value="Arial, sans-serif" selected>Arial</option>
+                        <option value="Georgia, serif">Georgia</option>
+                        <option value="'Courier New', monospace">Courier New</option>
+                        <option value="Verdana, sans-serif">Verdana</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label>Primary Color:</label>
+                    <input type="color" id="primaryColor" value="#2c3e50">
+                </div>
+                <div class="setting-group">
+                    <label>Secondary Color:</label>
+                    <input type="color" id="secondaryColor" value="#3498db">
+                </div>
+                <div class="setting-group">
+                    <label>Background Color:</label>
+                    <input type="color" id="backgroundColor" value="#ecf0f1">
+                </div>
+                <div class="setting-group">
+                    <label>Text Color:</label>
+                    <input type="color" id="textColor" value="#2c3e50">
+                </div>
+                <div class="setting-buttons">
+                    <button onclick="applySettings()" class="btn-primary">Apply</button>
+                    <button onclick="resetSettings()" class="btn-secondary">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Research on Risks of Using Cryptocurrencies in the Public Sector</p>
+            <p>Author: Ihor Shylenko | Dissertation Topic: Risks of Using Cryptocurrencies in the Public Sector</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
+

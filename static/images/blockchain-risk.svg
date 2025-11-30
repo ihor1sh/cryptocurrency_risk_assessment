@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650">
+  <defs>
+    <!-- Clean gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8f9fa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e9ecef;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="lowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d1f2eb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#a3e4d7;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="mediumGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fef9e7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fdebd0;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="highGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fadbd8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f1948a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="criticalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ec7063;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c0392b;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#5d6d7e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#34495e;stop-opacity:1" />
+    </linearGradient>
+    <!-- Subtle shadow -->
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="0" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.2"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1000" height="650" fill="url(#bgGrad)"/>
+  
+  <!-- Main Container -->
+  <rect x="50" y="40" width="900" height="570" fill="#ffffff" rx="12" filter="url(#softShadow)"/>
+  
+  <!-- Header -->
+  <rect x="50" y="40" width="900" height="70" fill="url(#headerGrad)" rx="12 12 0 0"/>
+  <text x="500" y="85" font-family="'Segoe UI', Arial, sans-serif" font-size="26" font-weight="600" text-anchor="middle" fill="#ffffff">Risk Assessment Matrix</text>
+  <text x="500" y="105" font-family="'Segoe UI', Arial, sans-serif" font-size="14" text-anchor="middle" fill="#ecf0f1" opacity="0.9">Cryptocurrency &amp; Blockchain Technologies in Public Sector</text>
+  
+  <!-- Matrix Area -->
+  <g transform="translate(150, 150)">
+    <!-- Grid Background -->
+    <rect x="0" y="0" width="700" height="350" fill="#ffffff" stroke="#dee2e6" stroke-width="2" rx="8"/>
+    
+    <!-- Risk Zones - Clean and distinct -->
+    <!-- Low Risk (Bottom Left) -->
+    <rect x="0" y="233" width="233" height="117" fill="url(#lowGrad)" rx="4"/>
+    <rect x="233" y="233" width="234" height="117" fill="url(#lowGrad)" rx="4" opacity="0.6"/>
+    
+    <!-- Medium Risk (Middle) -->
+    <rect x="0" y="117" width="233" height="116" fill="url(#mediumGrad)" rx="4"/>
+    <rect x="233" y="117" width="234" height="116" fill="url(#mediumGrad)" rx="4"/>
+    <rect x="467" y="233" width="233" height="117" fill="url(#mediumGrad)" rx="4" opacity="0.7"/>
+    
+    <!-- High Risk (Top Right) -->
+    <rect x="233" y="0" width="234" height="117" fill="url(#highGrad)" rx="4"/>
+    <rect x="467" y="117" width="233" height="116" fill="url(#highGrad)" rx="4"/>
+    
+    <!-- Critical Risk (Top Right Corner) -->
+    <rect x="467" y="0" width="233" height="117" fill="url(#criticalGrad)" rx="4"/>
+    <rect x="467" y="0" width="233" height="117" fill="none" stroke="#c0392b" stroke-width="2.5" stroke-dasharray="6,4" rx="4"/>
+    
+    <!-- Grid Lines -->
+    <line x1="233" y1="0" x2="233" y2="350" stroke="#adb5bd" stroke-width="1"/>
+    <line x1="467" y1="0" x2="467" y2="350" stroke="#adb5bd" stroke-width="1"/>
+    <line x1="0" y1="117" x2="700" y2="117" stroke="#adb5bd" stroke-width="1"/>
+    <line x1="0" y1="233" x2="700" y2="233" stroke="#adb5bd" stroke-width="1"/>
+    
+    <!-- Risk Points - Clean and simple -->
+    <!-- Security Risk (Critical Zone) -->
+    <g transform="translate(583, 58)">
+      <circle r="28" fill="#c0392b" filter="url(#softShadow)"/>
+      <circle r="24" fill="#e74c3c"/>
+      <path d="M -10 -6 L -5 -10 L 5 -10 L 10 -6 L 10 6 L 5 10 L -5 10 L -10 6 Z" fill="#ffffff" transform="rotate(45)"/>
+      <circle r="4" fill="#e74c3c" cx="0" cy="-4"/>
+      <text x="0" y="42" font-family="'Segoe UI', Arial, sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#2c3e50">Security</text>
+      <text x="0" y="54" font-family="'Segoe UI', Arial, sans-serif" font-size="10" text-anchor="middle" fill="#7f8c8d">85%</text>
+    </g>
+    
+    <!-- Economic Risk (High Zone) -->
+    <g transform="translate(500, 175)">
+      <circle r="26" fill="#e67e22" filter="url(#softShadow)"/>
+      <circle r="22" fill="#f39c12"/>
+      <text x="0" y="7" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle" fill="#ffffff">$</text>
+      <text x="0" y="40" font-family="'Segoe UI', Arial, sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#2c3e50">Economic</text>
+      <text x="0" y="52" font-family="'Segoe UI', Arial, sans-serif" font-size="10" text-anchor="middle" fill="#7f8c8d">70%</text>
+    </g>
+    
+    <!-- Legal Risk (Medium Zone) -->
+    <g transform="translate(366, 292)">
+      <circle r="24" fill="#f39c12" filter="url(#softShadow)"/>
+      <circle r="20" fill="#f1c40f"/>
+      <path d="M -8 -7 L 8 -7 L 5 4 L -5 4 Z" fill="#ffffff"/>
+      <rect x="-4" y="4" width="8" height="6" fill="#ffffff" rx="1"/>
+      <text x="0" y="38" font-family="'Segoe UI', Arial, sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#2c3e50">Legal</text>
+      <text x="0" y="50" font-family="'Segoe UI', Arial, sans-serif" font-size="10" text-anchor="middle" fill="#7f8c8d">65%</text>
+    </g>
+    
+    <!-- Operational Risk (Low-Medium Zone) -->
+    <g transform="translate(200, 325)">
+      <circle r="22" fill="#3498db" filter="url(#softShadow)"/>
+      <circle r="18" fill="#5dade2"/>
+      <circle r="14" fill="none" stroke="#ffffff" stroke-width="2"/>
+      <circle r="7" fill="#ffffff"/>
+      <circle r="3" fill="#5dade2"/>
+      <text x="0" y="36" font-family="'Segoe UI', Arial, sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#2c3e50">Operational</text>
+      <text x="0" y="48" font-family="'Segoe UI', Arial, sans-serif" font-size="10" text-anchor="middle" fill="#7f8c8d">60%</text>
+    </g>
+    
+    <!-- Zone Labels - Subtle -->
+    <text x="116" y="295" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="600" text-anchor="middle" fill="#27ae60" opacity="0.8">Low</text>
+    <text x="350" y="180" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="600" text-anchor="middle" fill="#f39c12" opacity="0.8">Medium</text>
+    <text x="583" y="80" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="600" text-anchor="middle" fill="#e74c3c" opacity="0.8">High</text>
+    <text x="583" y="30" font-family="'Segoe UI', Arial, sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="#c0392b">CRITICAL</text>
+  </g>
+  
+  <!-- Axis Labels -->
+  <text x="500" y="140" font-family="'Segoe UI', Arial, sans-serif" font-size="16" font-weight="600" text-anchor="middle" fill="#34495e">Impact</text>
+  <text x="120" y="360" font-family="'Segoe UI', Arial, sans-serif" font-size="16" font-weight="600" fill="#34495e" transform="rotate(-90 120 360)">Probability</text>
+  
+  <!-- X-Axis Scale -->
+  <text x="266" y="535" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="500" text-anchor="middle" fill="#495057">Low</text>
+  <text x="500" y="535" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="500" text-anchor="middle" fill="#495057">Medium</text>
+  <text x="733" y="535" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="500" text-anchor="middle" fill="#495057">High</text>
+  
+  <!-- Y-Axis Scale -->
+  <text x="100" y="200" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="500" text-anchor="middle" fill="#495057">High</text>
+  <text x="100" y="300" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="500" text-anchor="middle" fill="#495057">Medium</text>
+  <text x="100" y="400" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="500" text-anchor="middle" fill="#495057">Low</text>
+  
+  <!-- Legend - Clean and organized -->
+  <g transform="translate(150, 540)">
+    <text x="0" y="0" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" fill="#2c3e50">Risk Levels:</text>
+    <rect x="0" y="8" width="18" height="18" fill="url(#lowGrad)" rx="3" stroke="#27ae60" stroke-width="1"/>
+    <text x="25" y="21" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#495057">Low</text>
+    
+    <rect x="70" y="8" width="18" height="18" fill="url(#mediumGrad)" rx="3" stroke="#f39c12" stroke-width="1"/>
+    <text x="95" y="21" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#495057">Medium</text>
+    
+    <rect x="160" y="8" width="18" height="18" fill="url(#highGrad)" rx="3" stroke="#e74c3c" stroke-width="1"/>
+    <text x="185" y="21" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#495057">High</text>
+    
+    <rect x="230" y="8" width="18" height="18" fill="url(#criticalGrad)" rx="3" stroke="#c0392b" stroke-width="1.5"/>
+    <text x="255" y="21" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="600" fill="#c0392b">Critical</text>
+  </g>
+  
+  <!-- Footer Note -->
+  <text x="500" y="595" font-family="'Segoe UI', Arial, sans-serif" font-size="11" text-anchor="middle" fill="#7f8c8d" opacity="0.8">Assessment based on probability and impact analysis</text>
+</svg>

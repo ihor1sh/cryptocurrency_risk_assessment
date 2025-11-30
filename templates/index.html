@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-content">
+    <h2><i class="fas fa-info-circle"></i> About the Research</h2>
+    
+    <div class="content-section">
+        <p class="intro-text">
+            Cryptocurrencies and blockchain technologies are gaining increasing popularity in various areas of life, 
+            including the public sector. However, their use in government structures is associated with numerous 
+            risks that require careful analysis and assessment.
+        </p>
+        
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='images/crypto-gov.svg') }}" alt="Cryptocurrencies in the public sector" class="content-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <div class="image-placeholder" style="display:none; padding: 2rem; background: #f0f0f0; border-radius: 10px; text-align: center;">
+                <i class="fas fa-image" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem;"></i>
+                <p style="color: #999;">Image: Integration of cryptocurrency technologies into public systems</p>
+            </div>
+            <p class="image-caption">Integration of cryptocurrency technologies into public systems</p>
+        </div>
+
+        <h3>Main Research Directions:</h3>
+        <ul class="research-list">
+            <li><i class="fas fa-check-circle"></i> Technical security risks</li>
+            <li><i class="fas fa-check-circle"></i> Economic and financial risks</li>
+            <li><i class="fas fa-check-circle"></i> Legal and regulatory challenges</li>
+            <li><i class="fas fa-check-circle"></i> Operational risks</li>
+            <li><i class="fas fa-check-circle"></i> Reputational risks</li>
+        </ul>
+
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='images/blockchain-risk.svg') }}" alt="Blockchain risks" class="content-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <div class="image-placeholder" style="display:none; padding: 2rem; background: #f0f0f0; border-radius: 10px; text-align: center;">
+                <i class="fas fa-chart-pie" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem;"></i>
+                <p style="color: #999;">Image: Analysis of blockchain technology risks</p>
+            </div>
+            <p class="image-caption">Analysis of blockchain technology risks</p>
+        </div>
+
+        <h3>Research Objective</h3>
+        <p>
+            The objective of this research is a comprehensive analysis of risks associated with the use of cryptocurrencies 
+            and blockchain technologies in the public sector, development of a methodology for their assessment, and formulation 
+            of recommendations for minimizing negative consequences.
+        </p>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-content">
+    <h2><i class="fas fa-exclamation-triangle"></i> Risk Categories</h2>
+    
+    <div class="content-section">
+        <div class="risk-category">
+            <h3><i class="fas fa-lock"></i> Technical Risks</h3>
+            <p>
+                Technical risks include software vulnerabilities, the possibility of cyberattacks, 
+                problems with blockchain network scalability, as well as risks of losing private keys.
+            </p>
+            <ul>
+                <li>Smart contract vulnerabilities</li>
+                <li>51% attacks on blockchain networks</li>
+                <li>Performance and transaction speed issues</li>
+                <li>Loss of access to funds due to key loss</li>
+            </ul>
+        </div>
+
+        <div class="risk-category">
+            <h3><i class="fas fa-dollar-sign"></i> Economic Risks</h3>
+            <p>
+                Cryptocurrency price volatility creates significant economic risks for public budgets. 
+                In addition, there are risks of losing funds due to errors or fraud.
+            </p>
+            <ul>
+                <li>Cryptocurrency price volatility</li>
+                <li>Liquidity risks</li>
+                <li>Possibility of losing public funds</li>
+                <li>Impact on fiscal policy</li>
+            </ul>
+        </div>
+
+        <div class="risk-category">
+            <h3><i class="fas fa-gavel"></i> Legal and Regulatory Risks</h3>
+            <p>
+                Legal uncertainty, lack of clear regulatory mechanisms and international 
+                standards create additional challenges for public institutions.
+            </p>
+            <ul>
+                <li>Lack of clear legal regulation</li>
+                <li>International jurisdiction conflicts</li>
+                <li>Complexity of tracking and taxation</li>
+                <li>Issues with liability and insurance</li>
+            </ul>
+        </div>
+
+        <div class="risk-category">
+            <h3><i class="fas fa-users"></i> Operational Risks</h3>
+            <p>
+                Operational risks are related to managing cryptocurrency assets, training personnel 
+                and integrating new technologies into existing public systems.
+            </p>
+            <ul>
+                <li>Complexity of managing cryptocurrency assets</li>
+                <li>Need for staff training</li>
+                <li>Integration problems with existing systems</li>
+                <li>Dependence on technical providers</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

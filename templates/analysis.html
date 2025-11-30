@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-content">
+    <h2><i class="fas fa-chart-line"></i> Risk Analysis</h2>
+    
+    <div class="content-section">
+        <h3>Risk Matrix</h3>
+        <p>
+            A risk matrix is used to assess the risks of using cryptocurrencies in the public sector, 
+            which takes into account the probability of an event occurring and its impact on public institutions.
+        </p>
+
+        <div class="analysis-chart">
+            <div class="risk-matrix-container">
+                <div class="risk-matrix">
+                    <div class="matrix-labels">
+                        <div class="y-axis-label">Probability</div>
+                        <div class="x-axis-label">Impact</div>
+                    </div>
+                    <div class="matrix-grid">
+                        <!-- Matrix cells with risk zones -->
+                        <div class="matrix-cell low-risk-zone">
+                            <span class="zone-label">Low</span>
+                        </div>
+                        <div class="matrix-cell medium-risk-zone">
+                            <span class="zone-label">Medium</span>
+                        </div>
+                        <div class="matrix-cell high-risk-zone">
+                            <span class="zone-label">High</span>
+                        </div>
+                        <div class="matrix-cell low-risk-zone">
+                            <span class="zone-label">Low</span>
+                        </div>
+                        <div class="matrix-cell medium-risk-zone">
+                            <span class="zone-label">Medium</span>
+                        </div>
+                        <div class="matrix-cell high-risk-zone">
+                            <span class="zone-label">High</span>
+                        </div>
+                        <div class="matrix-cell medium-risk-zone">
+                            <span class="zone-label">Medium</span>
+                        </div>
+                        <div class="matrix-cell high-risk-zone">
+                            <span class="zone-label">High</span>
+                        </div>
+                        <div class="matrix-cell critical-risk-zone">
+                            <span class="zone-label">Critical</span>
+                        </div>
+                    </div>
+                    <!-- Risk points -->
+                    <div class="risk-points">
+                        <div class="risk-point" style="bottom: 15%; left: 20%;" data-risk="Security Risk (85%)">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="risk-point" style="bottom: 25%; left: 50%;" data-risk="Economic Risk (70%)">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="risk-point" style="bottom: 35%; left: 40%;" data-risk="Legal Risk (65%)">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <div class="risk-point" style="bottom: 45%; left: 30%;" data-risk="Operational Risk (60%)">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                    </div>
+                    <!-- Axis labels -->
+                    <div class="axis-labels-x">
+                        <span>Low</span>
+                        <span>Medium</span>
+                        <span>High</span>
+                    </div>
+                    <div class="axis-labels-y">
+                        <span>High</span>
+                        <span>Medium</span>
+                        <span>Low</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3>Quantitative Analysis</h3>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-shield-alt"></i></div>
+                <div class="stat-value">85%</div>
+                <div class="stat-label">Security Risk</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="stat-value">70%</div>
+                <div class="stat-label">Economic Risk</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-balance-scale"></i></div>
+                <div class="stat-value">65%</div>
+                <div class="stat-label">Legal Risk</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-cogs"></i></div>
+                <div class="stat-value">60%</div>
+                <div class="stat-label">Operational Risk</div>
+            </div>
+        </div>
+
+        <h3>Event Development Scenarios</h3>
+        <div class="scenario-list">
+            <div class="scenario-item high-risk">
+                <h4><i class="fas fa-exclamation-circle"></i> Pessimistic Scenario</h4>
+                <p>A large-scale cyberattack on public cryptocurrency systems leads to the loss of significant funds 
+                and data. Impact: critical.</p>
+            </div>
+            <div class="scenario-item medium-risk">
+                <h4><i class="fas fa-info-circle"></i> Realistic Scenario</h4>
+                <p>Gradual integration of cryptocurrencies with the emergence of individual technical and legal problems. 
+                Impact: moderate.</p>
+            </div>
+            <div class="scenario-item low-risk">
+                <h4><i class="fas fa-check-circle"></i> Optimistic Scenario</h4>
+                <p>Successful implementation of cryptocurrency technologies with minimal risks thanks to careful 
+                planning and control. Impact: low.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
