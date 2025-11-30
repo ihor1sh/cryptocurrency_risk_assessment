@@ -46,3 +46,7 @@ Thumbs.db
 task.docx
 *.docx
 
+# Deployment guides (keep local, don't push to GitHub)
+DEPLOYMENT.md
+QUICK_DEPLOY.md
+
