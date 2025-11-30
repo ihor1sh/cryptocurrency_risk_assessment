@@ -18,7 +18,7 @@
                         <div class="y-axis-label">Probability</div>
                         <div class="x-axis-label">Impact</div>
                     </div>
-                    <div class="matrix-grid">
+                    <div class="matrix-grid" onclick="if(event.target.classList.contains('matrix-cell')) riskMatrix.showAddRiskForm(event)">
                         <!-- Matrix cells with risk zones -->
                         <div class="matrix-cell low-risk-zone">
                             <span class="zone-label">Low</span>
@@ -79,23 +79,26 @@
         </div>
 
         <h3>Quantitative Analysis</h3>
-        <div class="stats-grid">
-            <div class="stat-card">
+        <p style="margin-bottom: 1rem; font-style: italic; color: #666;">
+            Values are calculated as the average of probability and impact. Click on risk points to edit, or drag them to adjust positions.
+        </p>
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card" data-risk="Security Risk">
                 <div class="stat-icon"><i class="fas fa-shield-alt"></i></div>
                 <div class="stat-value">85%</div>
                 <div class="stat-label">Security Risk</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" data-risk="Economic Risk">
                 <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
                 <div class="stat-value">70%</div>
                 <div class="stat-label">Economic Risk</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" data-risk="Legal Risk">
                 <div class="stat-icon"><i class="fas fa-balance-scale"></i></div>
                 <div class="stat-value">65%</div>
                 <div class="stat-label">Legal Risk</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" data-risk="Operational Risk">
                 <div class="stat-icon"><i class="fas fa-cogs"></i></div>
                 <div class="stat-value">60%</div>
                 <div class="stat-label">Operational Risk</div>
@@ -122,5 +125,7 @@
         </div>
     </div>
 </div>
+
+<script src="{{ url_for('static', filename='js/matrix.js') }}"></script>
 {% endblock %}
 

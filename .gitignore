@@ -50,3 +50,8 @@ task.docx
 DEPLOYMENT.md
 QUICK_DEPLOY.md
 
+# Project reports (keep local, don't push to GitHub)
+PROJECT_REPORT.html
+PROJECT_REPORT_files/
+REPORT_INSTRUCTIONS.txt
+
