@@ -55,7 +55,7 @@ App_for_aspirant/
 │   ├── index.html        # Home page
 │   ├── risks.html        # Risks page
 │   ├── analysis.html     # Analysis page
-│   └── recommendations.html # Recommendations page
+│   └── recommendations.html # Recommendations spage
 ├── static/              # Static files
 │   ├── css/
 │   │   └── style.css    # Styles

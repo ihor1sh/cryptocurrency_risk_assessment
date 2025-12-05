@@ -1,0 +1,582 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-content">
+    <h2><i class="fas fa-shield-virus"></i> Bitcoin Blockchain Attack Probability</h2>
+    
+    <div class="content-section">
+        <div class="api-status" id="apiStatus">
+            <i class="fas fa-spinner fa-spin"></i> Loading data from API...
+        </div>
+
+        <!-- Bitcoin Network Info -->
+        <div class="bitcoin-info" id="bitcoinInfo" style="display: none;">
+            <h3><i class="fab fa-bitcoin"></i> Bitcoin Network Information</h3>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-label">BTC Price (USD)</div>
+                    <div class="info-value" id="btcPrice">-</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Market Capitalization</div>
+                    <div class="info-value" id="btcMarketCap">-</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">24h Change</div>
+                    <div class="info-value" id="btcChange24h">-</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Network Hash Rate</div>
+                    <div class="info-value" id="networkHashRate">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mining Pools Distribution -->
+        <div class="pools-section" id="poolsSection" style="display: none;">
+            <h3><i class="fas fa-network-wired"></i> Mining Pool Distribution (24h)</h3>
+            <div class="pools-info">
+                <div class="pools-warning" id="poolsWarning"></div>
+                <div class="pools-stats" id="poolsStats" style="margin-bottom: 1rem; font-size: 0.9rem; color: #666;"></div>
+                <div class="pools-list" id="poolsList"></div>
+            </div>
+        </div>
+
+        <!-- Risk Summary -->
+        <div class="risk-summary" id="riskSummary" style="display: none;">
+            <h3><i class="fas fa-chart-pie"></i> Overall Risk Assessment</h3>
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="summary-label">Total Risk Score</div>
+                    <div class="summary-value" id="totalRiskScore">-</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">Risk Level</div>
+                    <div class="summary-value" id="riskLevel">-</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">Last Updated</div>
+                    <div class="summary-value" id="lastUpdated">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attacks List -->
+        <div class="attacks-container" id="attacksContainer" style="display: none;">
+            <h3><i class="fas fa-bug"></i> Attack Types and Their Probability</h3>
+            <div class="attacks-grid" id="attacksGrid">
+                <!-- Attacks will be loaded here via JavaScript -->
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage" style="display: none;">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="errorText">Error loading data</span>
+        </div>
+
+        <!-- Refresh Button -->
+        <div class="refresh-section">
+            <button class="btn-primary" onclick="loadAttackData()">
+                <i class="fas fa-sync-alt"></i> Refresh Data
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+.api-status {
+    padding: 1rem;
+    text-align: center;
+    color: #3498db;
+    font-weight: 500;
+}
+
+.bitcoin-info {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.info-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.info-label {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.info-value {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.pools-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #e8f4f8;
+    border-radius: 10px;
+    border: 1px solid #b3d9e6;
+}
+
+.pools-warning {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.pools-warning.safe {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.pools-warning.warning {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.pools-warning.danger {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.pools-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.pool-item {
+    background: white;
+    padding: 0.8rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.pool-name {
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.pool-percent {
+    font-size: 1.1rem;
+    color: #3498db;
+    font-weight: bold;
+}
+
+.pool-blocks {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 0.3rem;
+}
+
+.pool-item {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.pool-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.risk-summary {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #fff3cd;
+    border-radius: 10px;
+    border: 1px solid #ffc107;
+}
+
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.summary-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.summary-label {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.summary-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.attacks-container {
+    margin: 2rem 0;
+}
+
+.attacks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.attack-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.attack-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.attack-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.attack-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.attack-severity {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.severity-critical {
+    background: #dc3545;
+    color: white;
+}
+
+.severity-high {
+    background: #fd7e14;
+    color: white;
+}
+
+.severity-medium {
+    background: #ffc107;
+    color: #333;
+}
+
+.severity-low {
+    background: #28a745;
+    color: white;
+}
+
+.attack-description {
+    color: #666;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.attack-probability {
+    margin: 1rem 0;
+}
+
+.probability-label {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.probability-bar-container {
+    background: #e0e0e0;
+    border-radius: 10px;
+    height: 25px;
+    overflow: hidden;
+    position: relative;
+}
+
+.probability-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #28a745, #ffc107, #fd7e14, #dc3545);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+.attack-status {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+}
+
+.status-badge {
+    padding: 0.2rem 0.6rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.status-low-risk {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-medium-risk {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-high-risk {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-very-low-risk {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.attack-details {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e0e0e0;
+    font-size: 0.85rem;
+}
+
+.detail-item {
+    margin: 0.5rem 0;
+    color: #666;
+}
+
+.detail-label {
+    font-weight: bold;
+    color: #333;
+}
+
+.error-message {
+    padding: 1rem;
+    background: #f8d7da;
+    color: #721c24;
+    border-radius: 8px;
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.refresh-section {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.btn-primary {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-primary:hover {
+    background: #2980b9;
+}
+
+@media (max-width: 768px) {
+    .info-grid,
+    .summary-cards,
+    .attacks-grid,
+    .pools-list {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+async function loadAttackData() {
+    const apiStatus = document.getElementById('apiStatus');
+    const bitcoinInfo = document.getElementById('bitcoinInfo');
+    const poolsSection = document.getElementById('poolsSection');
+    const riskSummary = document.getElementById('riskSummary');
+    const attacksContainer = document.getElementById('attacksContainer');
+    const errorMessage = document.getElementById('errorMessage');
+    const attacksGrid = document.getElementById('attacksGrid');
+
+    // Show loading
+    apiStatus.style.display = 'block';
+    bitcoinInfo.style.display = 'none';
+    poolsSection.style.display = 'none';
+    riskSummary.style.display = 'none';
+    attacksContainer.style.display = 'none';
+    errorMessage.style.display = 'none';
+
+    try {
+        const response = await fetch('/api/blockchain-attacks');
+        const data = await response.json();
+
+        if (data.success) {
+            // Update Bitcoin info
+            if (data.bitcoin_data) {
+                document.getElementById('btcPrice').textContent = 
+                    data.bitcoin_data.usd ? `$${data.bitcoin_data.usd.toLocaleString()}` : 'N/A';
+                document.getElementById('btcMarketCap').textContent = 
+                    data.bitcoin_data.usd_market_cap ? 
+                    `$${(data.bitcoin_data.usd_market_cap / 1e9).toFixed(2)}B` : 'N/A';
+                const change24h = data.bitcoin_data.usd_24h_change;
+                if (change24h !== undefined) {
+                    const changeElement = document.getElementById('btcChange24h');
+                    changeElement.textContent = `${change24h >= 0 ? '+' : ''}${change24h.toFixed(2)}%`;
+                    changeElement.style.color = change24h >= 0 ? '#28a745' : '#dc3545';
+                }
+            }
+            document.getElementById('networkHashRate').textContent = data.network_hash_rate || 'N/A';
+
+            // Update mining pools
+            if (data.mining_pools) {
+                const poolsList = document.getElementById('poolsList');
+                poolsList.innerHTML = '';
+                data.mining_pools.forEach(pool => {
+                    const poolItem = document.createElement('div');
+                    poolItem.className = 'pool-item';
+                    const blockCount = pool.block_count ? ` (${pool.block_count} blocks)` : '';
+                    const rank = pool.rank ? `#${pool.rank}` : '';
+                    poolItem.innerHTML = `
+                        <div class="pool-name">${rank} ${pool.name}</div>
+                        <div class="pool-percent">${pool.hash_rate_percent}%</div>
+                        ${blockCount ? `<div class="pool-blocks">${blockCount}</div>` : ''}
+                    `;
+                    if (pool.link) {
+                        poolItem.style.cursor = 'pointer';
+                        poolItem.onclick = () => window.open(pool.link, '_blank');
+                        poolItem.title = 'Click to visit pool website';
+                    }
+                    poolsList.appendChild(poolItem);
+                });
+
+                // Show warning based on top pools combined
+                const warningDiv = document.getElementById('poolsWarning');
+                if (data.top_pools_combined >= 50) {
+                    warningDiv.className = 'pools-warning danger';
+                    warningDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> <strong>Warning:</strong> Top 2 pools control ${data.top_pools_combined}% of hash rate. This increases 51% attack risk.`;
+                } else if (data.top_pools_combined >= 40) {
+                    warningDiv.className = 'pools-warning warning';
+                    warningDiv.innerHTML = `<i class="fas fa-info-circle"></i> <strong>Notice:</strong> Top 2 pools control ${data.top_pools_combined}% of hash rate. Monitor closely.`;
+                } else {
+                    warningDiv.className = 'pools-warning safe';
+                    warningDiv.innerHTML = `<i class="fas fa-check-circle"></i> <strong>Safe:</strong> Top 2 pools control ${data.top_pools_combined}% of hash rate. Network is well distributed.`;
+                }
+                
+                // Show pool statistics
+                const statsDiv = document.getElementById('poolsStats');
+                if (data.total_blocks_24h) {
+                    statsDiv.innerHTML = `<i class="fas fa-info-circle"></i> Total blocks in last 24h: <strong>${data.total_blocks_24h}</strong> | Data source: <strong>${data.data_source || 'mempool.space API'}</strong>`;
+                }
+                
+                poolsSection.style.display = 'block';
+            }
+
+            // Update risk summary
+            document.getElementById('totalRiskScore').textContent = `${data.total_risk_score}%`;
+            const riskLevelElement = document.getElementById('riskLevel');
+            riskLevelElement.textContent = data.risk_level;
+            riskLevelElement.className = `risk-level-${data.risk_level.toLowerCase()}`;
+            document.getElementById('lastUpdated').textContent = data.last_updated;
+
+            // Display attacks
+            attacksGrid.innerHTML = '';
+            data.attacks.forEach(attack => {
+                const attackCard = createAttackCard(attack);
+                attacksGrid.appendChild(attackCard);
+            });
+
+            // Show all sections
+            apiStatus.style.display = 'none';
+            bitcoinInfo.style.display = 'block';
+            riskSummary.style.display = 'block';
+            attacksContainer.style.display = 'block';
+        } else {
+            throw new Error(data.error || 'Unknown error');
+        }
+    } catch (error) {
+        console.error('Error loading attack data:', error);
+        apiStatus.style.display = 'none';
+        errorMessage.style.display = 'block';
+        document.getElementById('errorText').textContent = 
+            `Error loading data: ${error.message}`;
+    }
+}
+
+function createAttackCard(attack) {
+    const card = document.createElement('div');
+    card.className = 'attack-card';
+
+    const severityClass = `severity-${attack.severity.toLowerCase()}`;
+    const statusClass = attack.status.toLowerCase().replace(/\s+/g, '-').replace('risk', 'risk');
+
+    card.innerHTML = `
+        <div class="attack-header">
+            <div class="attack-name">${attack.name}</div>
+            <div class="attack-severity ${severityClass}">${attack.severity}</div>
+        </div>
+        <div class="attack-description">${attack.description}</div>
+        <div class="attack-probability">
+            <div class="probability-label">Probability: ${attack.probability}%</div>
+            <div class="probability-bar-container">
+                <div class="probability-bar" style="width: ${Math.min(attack.probability * 20, 100)}%">
+                    ${attack.probability}%
+                </div>
+            </div>
+        </div>
+        <div class="attack-status">
+            <span class="status-badge ${statusClass}">${attack.status}</span>
+        </div>
+        <div class="attack-details">
+            <div class="detail-item">
+                <span class="detail-label">Last Occurrence:</span> ${attack.last_occurrence}
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Mitigation:</span> ${attack.mitigation}
+            </div>
+        </div>
+    `;
+
+    return card;
+}
+
+// Load data on page load
+document.addEventListener('DOMContentLoaded', loadAttackData);
+</script>
+{% endblock %}
