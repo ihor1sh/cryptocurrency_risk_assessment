@@ -44,15 +44,58 @@ Thumbs.db
 
 # Project specific
 task.docx
-*.docx
 
 # Deployment guides (keep local, don't push to GitHub)
 DEPLOYMENT.md
 QUICK_DEPLOY.md
 
-# Project reports (keep local, don't push to GitHub)
+# Project reports and documentation (keep local, don't push to GitHub)
 PROJECT_REPORT.html
 PROJECT_REPORT_files/
 REPORT_INSTRUCTIONS.txt
 MATRIX_EXPLANATION.md
 PROJECT_REPORT_Ihor_Shylenko.pdf
+PROJECT_REPORT_Ihor_Shylenko.html.docx
+PROJECT_REPORT_Ihor_Shylenko.html
+BLOCKCHAIN_ATTACKS_REPORT.html
+BLOCKCHAIN_ATTACKS_REPORT.pdf
+BLOCKCHAIN_ATTACKS_SHORT_REPORT.html
+BLOCKCHAIN_ATTACKS_SHORT_REPORT.pdf
+BLOCKCHAIN_ATTACKS_SHORT_REPORT.md
+*.pdf
+*.docx
+*.doc
+BLOCKCHAIN_ATTACKS_REPORT_files/
+PROJECT_REPORT_files/
+
+# Presentations (keep local, don't push to GitHub)
+presentation.html
+presentation.pptx
+presentation.pptm
+presentation.ppt
+*.pptx
+*.pptm
+*.ppt
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+*.ico
+*.webp
+*.svg
+*.md
+*.txt
+*.doc
+*.docx
+*.docm
+*.docx
+*.docm
+*.docx
+*.docm
+convert_presentation.py
+create_powerpoint.py
+PRESENTATION_INSTRUCTIONS.md
+INSTALL_PPTX.md
+CONVERT_REPORT_TO_PDF.md

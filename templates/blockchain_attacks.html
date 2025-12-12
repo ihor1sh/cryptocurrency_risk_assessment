@@ -38,7 +38,43 @@
             <div class="pools-info">
                 <div class="pools-warning" id="poolsWarning"></div>
                 <div class="pools-stats" id="poolsStats" style="margin-bottom: 1rem; font-size: 0.9rem; color: #666;"></div>
+                
+                <!-- Mining Pools Pie Chart -->
+                <div class="chart-container">
+                    <canvas id="poolsPieChart"></canvas>
+                </div>
+                
+                <!-- Mining Pools Bar Chart -->
+                <div class="chart-container">
+                    <canvas id="poolsBarChart"></canvas>
+                </div>
+                
                 <div class="pools-list" id="poolsList"></div>
+            </div>
+        </div>
+        
+        <!-- Attack Probability Charts -->
+        <div class="charts-section" id="chartsSection" style="display: none;">
+            <h3><i class="fas fa-chart-bar"></i> Attack Probability Visualization</h3>
+            
+            <!-- Attack Probability Bar Chart -->
+            <div class="chart-container">
+                <canvas id="attackProbabilityChart"></canvas>
+            </div>
+            
+            <!-- Attack Severity Distribution -->
+            <div class="chart-container">
+                <canvas id="attackSeverityChart"></canvas>
+            </div>
+            
+            <!-- Risk Level Gauge -->
+            <div class="gauge-container">
+                <canvas id="riskGaugeChart"></canvas>
+            </div>
+            
+            <!-- Attack Probability vs Severity Scatter -->
+            <div class="chart-container">
+                <canvas id="attackScatterChart"></canvas>
             </div>
         </div>
 
@@ -415,6 +451,37 @@
     background: #2980b9;
 }
 
+.charts-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+}
+
+.chart-container {
+    position: relative;
+    height: 400px;
+    margin: 2rem 0;
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.gauge-container {
+    position: relative;
+    height: 300px;
+    margin: 2rem 0;
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 @media (max-width: 768px) {
     .info-grid,
     .summary-cards,
@@ -422,14 +489,30 @@
     .pools-list {
         grid-template-columns: 1fr;
     }
+    
+    .chart-container {
+        height: 300px;
+    }
 }
 </style>
 
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
 <script>
+// Chart instances
+let poolsPieChart = null;
+let poolsBarChart = null;
+let attackProbabilityChart = null;
+let attackSeverityChart = null;
+let riskGaugeChart = null;
+let attackScatterChart = null;
+
 async function loadAttackData() {
     const apiStatus = document.getElementById('apiStatus');
     const bitcoinInfo = document.getElementById('bitcoinInfo');
     const poolsSection = document.getElementById('poolsSection');
+    const chartsSection = document.getElementById('chartsSection');
     const riskSummary = document.getElementById('riskSummary');
     const attacksContainer = document.getElementById('attacksContainer');
     const errorMessage = document.getElementById('errorMessage');
@@ -439,6 +522,7 @@ async function loadAttackData() {
     apiStatus.style.display = 'block';
     bitcoinInfo.style.display = 'none';
     poolsSection.style.display = 'none';
+    chartsSection.style.display = 'none';
     riskSummary.style.display = 'none';
     attacksContainer.style.display = 'none';
     errorMessage.style.display = 'none';
@@ -505,8 +589,23 @@ async function loadAttackData() {
                     statsDiv.innerHTML = `<i class="fas fa-info-circle"></i> Total blocks in last 24h: <strong>${data.total_blocks_24h}</strong> | Data source: <strong>${data.data_source || 'mempool.space API'}</strong>`;
                 }
                 
+                // Create mining pool charts
+                createMiningPoolCharts(data.mining_pools);
+                
                 poolsSection.style.display = 'block';
             }
+            
+            // Create attack probability charts
+            if (data.attacks) {
+                createAttackCharts(data.attacks, data.total_risk_score, data.risk_level);
+                chartsSection.style.display = 'block';
+            }
+            
+            // Show all sections
+            apiStatus.style.display = 'none';
+            bitcoinInfo.style.display = 'block';
+            riskSummary.style.display = 'block';
+            attacksContainer.style.display = 'block';
 
             // Update risk summary
             document.getElementById('totalRiskScore').textContent = `${data.total_risk_score}%`;
@@ -522,11 +621,6 @@ async function loadAttackData() {
                 attacksGrid.appendChild(attackCard);
             });
 
-            // Show all sections
-            apiStatus.style.display = 'none';
-            bitcoinInfo.style.display = 'block';
-            riskSummary.style.display = 'block';
-            attacksContainer.style.display = 'block';
         } else {
             throw new Error(data.error || 'Unknown error');
         }
@@ -574,6 +668,398 @@ function createAttackCard(attack) {
     `;
 
     return card;
+}
+
+// Create Mining Pool Charts
+function createMiningPoolCharts(pools) {
+    if (!pools || pools.length === 0) return;
+    
+    // Prepare data for charts
+    const topPools = pools.slice(0, 6); // Top 6 pools
+    const labels = topPools.map(p => p.name);
+    const percentages = topPools.map(p => p.hash_rate_percent);
+    const colors = [
+        '#3498db', '#e74c3c', '#f39c12', '#27ae60', 
+        '#9b59b6', '#1abc9c', '#34495e', '#e67e22'
+    ];
+    
+    // Destroy existing charts if they exist
+    if (poolsPieChart) poolsPieChart.destroy();
+    if (poolsBarChart) poolsBarChart.destroy();
+    
+    // Pie Chart for Pool Distribution
+    const pieCtx = document.getElementById('poolsPieChart').getContext('2d');
+    poolsPieChart = new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: percentages,
+                backgroundColor: colors.slice(0, labels.length),
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Mining Pool Hash Rate Distribution',
+                    font: { size: 16, weight: 'bold' }
+                },
+                legend: {
+                    position: 'right',
+                    labels: {
+                        padding: 15,
+                        font: { size: 12 }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.parsed + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+    
+    // Bar Chart for Pool Comparison
+    const barCtx = document.getElementById('poolsBarChart').getContext('2d');
+    poolsBarChart = new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Hash Rate %',
+                data: percentages,
+                backgroundColor: colors.slice(0, labels.length).map(c => c + '80'),
+                borderColor: colors.slice(0, labels.length),
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Mining Pool Hash Rate Comparison',
+                    font: { size: 16, weight: 'bold' }
+                },
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Hash Rate: ' + context.parsed.y + '%';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Hash Rate Percentage'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Mining Pools'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Create Attack Probability Charts
+function createAttackCharts(attacks, totalRisk, riskLevel) {
+    if (!attacks || attacks.length === 0) return;
+    
+    // Destroy existing charts if they exist
+    if (attackProbabilityChart) attackProbabilityChart.destroy();
+    if (attackSeverityChart) attackSeverityChart.destroy();
+    if (riskGaugeChart) riskGaugeChart.destroy();
+    
+    // Prepare data
+    const attackNames = attacks.map(a => a.name);
+    const probabilities = attacks.map(a => a.probability);
+    const severities = attacks.map(a => a.severity);
+    
+    // Color mapping
+    const severityColors = {
+        'Critical': '#dc3545',
+        'High': '#fd7e14',
+        'Medium': '#ffc107',
+        'Low': '#28a745'
+    };
+    
+    // Attack Probability Bar Chart
+    const probCtx = document.getElementById('attackProbabilityChart').getContext('2d');
+    attackProbabilityChart = new Chart(probCtx, {
+        type: 'bar',
+        data: {
+            labels: attackNames,
+            datasets: [{
+                label: 'Attack Probability (%)',
+                data: probabilities,
+                backgroundColor: probabilities.map(p => {
+                    if (p >= 4) return '#dc3545';
+                    if (p >= 2) return '#fd7e14';
+                    if (p >= 1) return '#ffc107';
+                    return '#28a745';
+                }),
+                borderColor: probabilities.map(p => {
+                    if (p >= 4) return '#c82333';
+                    if (p >= 2) return '#e55a00';
+                    if (p >= 1) return '#e0a800';
+                    return '#218838';
+                }),
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Blockchain Attack Probability Analysis',
+                    font: { size: 16, weight: 'bold' }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Probability: ' + context.parsed.y + '%';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 6,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Probability (%)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 45
+                    },
+                    title: {
+                        display: true,
+                        text: 'Attack Types'
+                    }
+                }
+            }
+        }
+    });
+    
+    // Attack Severity Distribution Pie Chart
+    const severityCount = {};
+    severities.forEach(s => {
+        severityCount[s] = (severityCount[s] || 0) + 1;
+    });
+    
+    const severityCtx = document.getElementById('attackSeverityChart').getContext('2d');
+    attackSeverityChart = new Chart(severityCtx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(severityCount),
+            datasets: [{
+                data: Object.values(severityCount),
+                backgroundColor: Object.keys(severityCount).map(s => severityColors[s] || '#6c757d'),
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Attack Severity Distribution',
+                    font: { size: 16, weight: 'bold' }
+                },
+                legend: {
+                    position: 'right'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.parsed || 0;
+                            return label + ': ' + value + ' attack(s)';
+                        }
+                    }
+                }
+            }
+        }
+    });
+    
+    // Risk Level Gauge Chart (using doughnut with center text)
+    const riskLevels = { 'Low': 33, 'Medium': 66, 'High': 100 };
+    const riskValue = riskLevels[riskLevel] || 50;
+    const riskColor = riskLevel === 'High' ? '#dc3545' : riskLevel === 'Medium' ? '#ffc107' : '#28a745';
+    
+    const gaugeCtx = document.getElementById('riskGaugeChart').getContext('2d');
+    riskGaugeChart = new Chart(gaugeCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Risk', 'Safe'],
+            datasets: [{
+                data: [riskValue, 100 - riskValue],
+                backgroundColor: [riskColor, '#e0e0e0'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '75%',
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Overall Risk Level: ' + riskLevel,
+                    font: { size: 18, weight: 'bold' },
+                    color: riskColor,
+                    padding: { bottom: 20 }
+                },
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        },
+        plugins: [{
+            id: 'centerText',
+            beforeDraw: function(chart) {
+                const ctx = chart.ctx;
+                const centerX = chart.chartArea.left + (chart.chartArea.right - chart.chartArea.left) / 2;
+                const centerY = chart.chartArea.top + (chart.chartArea.bottom - chart.chartArea.top) / 2;
+                
+                ctx.save();
+                ctx.font = 'bold 32px Arial';
+                ctx.fillStyle = riskColor;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(totalRisk + '%', centerX, centerY - 10);
+                
+                ctx.font = '16px Arial';
+                ctx.fillText('Total Risk', centerX, centerY + 20);
+                ctx.restore();
+            }
+        }]
+    });
+    
+    // Attack Probability vs Severity Scatter Chart
+    const severityValues = { 'Critical': 4, 'High': 3, 'Medium': 2, 'Low': 1 };
+    const scatterData = attacks.map(a => ({
+        x: a.probability,
+        y: severityValues[a.severity] || 1,
+        label: a.name
+    }));
+    
+    if (attackScatterChart) attackScatterChart.destroy();
+    
+    const scatterCtx = document.getElementById('attackScatterChart').getContext('2d');
+    attackScatterChart = new Chart(scatterCtx, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Attack Risk Matrix',
+                data: scatterData,
+                backgroundColor: scatterData.map(d => {
+                    if (d.x >= 4 || d.y >= 4) return '#dc3545';
+                    if (d.x >= 2 || d.y >= 3) return '#fd7e14';
+                    if (d.x >= 1 || d.y >= 2) return '#ffc107';
+                    return '#28a745';
+                }),
+                borderColor: scatterData.map(d => {
+                    if (d.x >= 4 || d.y >= 4) return '#c82333';
+                    if (d.x >= 2 || d.y >= 3) return '#e55a00';
+                    if (d.x >= 1 || d.y >= 2) return '#e0a800';
+                    return '#218838';
+                }),
+                borderWidth: 2,
+                pointRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Attack Probability vs Severity Matrix',
+                    font: { size: 16, weight: 'bold' }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const point = context.raw;
+                            const attack = attacks.find(a => a.name === point.label);
+                            return [
+                                'Attack: ' + point.label,
+                                'Probability: ' + point.x + '%',
+                                'Severity: ' + (attack ? attack.severity : 'Unknown')
+                            ];
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Probability (%)'
+                    },
+                    beginAtZero: true,
+                    max: 6
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Severity Level'
+                    },
+                    beginAtZero: true,
+                    max: 5,
+                    ticks: {
+                        stepSize: 1,
+                        callback: function(value) {
+                            const labels = { 1: 'Low', 2: 'Medium', 3: 'High', 4: 'Critical' };
+                            return labels[value] || '';
+                        }
+                    }
+                }
+            }
+        }
+    });
 }
 
 // Load data on page load

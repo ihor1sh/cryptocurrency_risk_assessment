@@ -69,7 +69,7 @@ App_for_aspirant/
 
 ### Main Pages:
 - **Home** - General information about the research
-- **Risks** - Risk categories (technical, economic, legal, operational)
+- **Risks** - Risk categories (technical, economic, legal, operational) - [Detailed Documentation](RISKS_PAGE_DOCUMENTATION.md)
 - **Analysis** - Risk matrix and quantitative analysis
 - **Recommendations** - Strategic and practical recommendations
 
@@ -124,10 +124,13 @@ The application will be available at `http://localhost:5000`
 
 ### Application Pages:
 - Home: `/`
-- Risks: `/risks`
+- Risks: `/risks` - Comprehensive risk categories documentation
 - Analysis: `/analysis`
 - Recommendations: `/recommendations`
 - Settings API: `/api/settings`
+
+### Documentation:
+- [Risks Page Documentation](RISKS_PAGE_DOCUMENTATION.md) - Detailed documentation of the Risks page functionality and risk categories
 
 ## 📄 License
 

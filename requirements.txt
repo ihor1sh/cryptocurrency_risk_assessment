@@ -3,3 +3,7 @@ Werkzeug==3.0.1
 gunicorn==21.2.0
 requests==2.31.0
 
+# Optional: for presentation conversion
+# weasyprint>=60.0  # Uncomment to enable PDF conversion
+# playwright>=1.40.0  # Uncomment for best quality PDF conversion
+
